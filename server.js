@@ -1,5 +1,6 @@
 const path = require("node:path");
 const express = require("express");
+const { rateLimit } = require('express-rate-limit')
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -26,8 +27,19 @@ databaseConnecton();
 const app = express();
 
 app.use(cors());
-app.options("*", cors());
+app.options("/{*any}", cors());
 app.use(compression());
+
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	limit: 100,
+    message : "Too much requests" 
+})
+
+// Apply the rate limiting middleware to all requests.
+app.use(limiter)
+
 
 // Stripe webhook requires the raw body for signature verification.
 app.post(
