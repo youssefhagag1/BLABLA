@@ -36,7 +36,7 @@ app.post(
     webhookCheckout
 );
 
-app.use(express.json())
+app.use(express.json({limit : "20kb"}))
 app.set("query parser", str => qs.parse(str));
 app.use(express.static(path.join(__dirname , "uploads")))
 
